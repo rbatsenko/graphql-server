@@ -1,18 +1,18 @@
 import cors from 'cors';
 import express from 'express';
-import { ApolloServer, gql } from 'apollo-server-express';
 import uuidv4 from 'uuid/v4';
+import { ApolloServer } from 'apollo-server-express';
 
-import typeDefs from './schema';
+import schema from './schema';
 import resolvers from './resolvers';
-import models from './models';
+import models, { sequelize } from './models';
 
 const app = express();
 
 app.use(cors());
 
 const server = new ApolloServer({
-  typeDefs,
+  typeDefs: schema,
   resolvers,
   context: {
     models,
@@ -22,6 +22,8 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app, path: '/graphql' });
 
-app.listen({ port: 4000 }, () => {
-  console.log('Apollo Server on http://localhost:4000/graphql');
+sequelize.sync().then(async () => {
+  app.listen({ port: 4000 }, () => {
+    console.log('Apollo Server on http://localhost:4000/graphql');
+  });
 });
