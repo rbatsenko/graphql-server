@@ -1,25 +1,14 @@
 import { gql } from 'apollo-server-express';
 
-const typeDefs = gql`
-  type Query {
-    users: [User!]
-    user(id: ID!): User
-    me: User
-
+export default gql`
+  extend type Query {
     messages: [Message!]!
     message(id: ID!): Message!
   }
 
-  type Mutation {
+  extend type Mutation {
     createMessage(text: String!): Message!
     deleteMessage(id: ID!): Boolean!
-  }
-
-  type User {
-    id: ID!
-    username: String!
-    age: Int
-    messages: [Message!]
   }
 
   type Message {
@@ -28,5 +17,3 @@ const typeDefs = gql`
     user: User!
   }
 `;
-
-export default typeDefs;
