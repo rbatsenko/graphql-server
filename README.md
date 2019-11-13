@@ -14,6 +14,5 @@ DATABASE_PASSWORD=
 
 - `npm install`
 - `npm start`
-  \
-  \
-  > Built on top of Basic Node Babel Server boilerplate (https://github.com/rwieruch/minimal-node-application)
+
+> Built on top of Basic Node Babel Server boilerplate (https://github.com/rwieruch/minimal-node-application)
