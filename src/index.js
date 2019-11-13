@@ -42,11 +42,6 @@ const resolvers = {
     me: (parent, args, { me }) => me,
     messages: () => Object.values(messages),
     message: (parent, { id }) => messages[id],
-    car: () => ({
-      manufacturer: 'Ford',
-      model: 'Focus',
-      productionYear: 2015,
-    }),
   },
 
   Mutation: {
@@ -76,8 +71,10 @@ const resolvers = {
 
   User: {
     username: ({ username }) => username,
-    messages: ({ id }) =>
-      Object.values(messages).filter(({ userId }) => userId === id),
+    messages: user =>
+      Object.values(messages).filter(
+        message => message.userId === user.id,
+      ),
   },
 
   Message: {

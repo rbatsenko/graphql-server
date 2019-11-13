@@ -5,7 +5,6 @@ const typeDefs = gql`
     users: [User!]
     user(id: ID!): User
     me: User
-    car: Car
 
     messages: [Message!]!
     message(id: ID!): Message!
@@ -27,12 +26,6 @@ const typeDefs = gql`
     id: ID!
     text: String!
     user: User!
-  }
-
-  type Car {
-    manufacturer: String!
-    model: String!
-    productionYear: Int!
   }
 `;
 
