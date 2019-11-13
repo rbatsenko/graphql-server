@@ -1,6 +1,6 @@
 # Simple GraphQL server
 
-Built with Node.js, Babel, Apollo, GraphQL
+Built with Node.js, Express, Babel, Apollo, GraphQL, Sequelize
 
 ## Installation
 
