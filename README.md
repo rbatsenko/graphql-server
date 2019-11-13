@@ -13,6 +13,8 @@ DATABASE_PASSWORD=
 ```
 
 - `npm install`
-- `npm start`  
+- `npm start`
+
+## Credits
 
 > Built on top of Basic Node Babel Server boilerplate (https://github.com/rwieruch/minimal-node-application)
