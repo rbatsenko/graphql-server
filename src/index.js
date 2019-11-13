@@ -1,54 +1,28 @@
 import cors from 'cors';
 import express from 'express';
 import { ApolloServer, gql } from 'apollo-server-express';
+import uuidv4 from 'uuid/v4';
+import typeDefs from './schema';
 
 const app = express();
 
 app.use(cors());
-
-const schema = gql`
-  type Query {
-    users: [User!]
-    user(id: ID!): User
-    me: User
-    car: Car
-
-    messages: [Message!]!
-    message(id: ID!): Message!
-  }
-
-  type User {
-    id: ID!
-    username: String!
-    age: Int
-  }
-
-  type Message {
-    id: ID!
-    text: String!
-    user: User!
-  }
-
-  type Car {
-    manufacturer: String!
-    model: String!
-    productionYear: Int!
-  }
-`;
 
 const users = {
   1: {
     id: '1',
     username: 'Roman Batsenko',
     age: 24,
+    messageIds: [1],
   },
   2: {
     id: '2',
     username: 'Dave Graham',
+    messageIds: [2],
   },
 };
 
-const messages = {
+let messages = {
   1: {
     id: '1',
     text: 'Hello World!',
@@ -75,8 +49,35 @@ const resolvers = {
     }),
   },
 
+  Mutation: {
+    createMessage: (parent, { text }, { me }) => {
+      const id = uuidv4();
+      const message = {
+        id,
+        text,
+        userId: me.id,
+      };
+
+      messages[id] = message;
+      users[me.id].messageIds.push(id);
+
+      return message;
+    },
+    deleteMessage: (parent, { id }) => {
+      if (!messages[id]) {
+        return false;
+      }
+      messages = Object.values(messages).filter(
+        message => message.id === id,
+      );
+      return true;
+    },
+  },
+
   User: {
     username: ({ username }) => username,
+    messages: ({ id }) =>
+      Object.values(messages).filter(({ userId }) => userId === id),
   },
 
   Message: {
@@ -85,7 +86,7 @@ const resolvers = {
 };
 
 const server = new ApolloServer({
-  typeDefs: schema,
+  typeDefs,
   resolvers,
   context: {
     me: users[1],
@@ -94,6 +95,6 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app, path: '/graphql' });
 
-app.listen({ port: 8000 }, () => {
-  console.log('Apollo Server on http://localhost:8000/graphql');
+app.listen({ port: 4000 }, () => {
+  console.log('Apollo Server on http://localhost:4000/graphql');
 });
