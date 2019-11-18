@@ -7,6 +7,7 @@ import { ApolloServer } from 'apollo-server-express';
 import schema from './schema';
 import resolvers from './resolvers';
 import models, { sequelize } from './models';
+import { users } from './__fixtures__/users';
 
 const app = express();
 
@@ -17,7 +18,7 @@ const server = new ApolloServer({
   resolvers,
   context: async () => ({
     models,
-    me: await models.User.findByLogin('rwieruch'),
+    me: await models.User.findByLogin('rbatsenko'),
   }),
 });
 
@@ -36,34 +37,11 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
 });
 
 const createUsersWithMessages = async () => {
-  await models.User.create(
-    {
-      username: 'rwieruch',
-      messages: [
-        {
-          text: 'Published the Road to learn React',
-        },
-      ],
-    },
-    {
-      include: [models.Message],
-    },
-  );
+  await models.User.create(users['rbatsenko'], {
+    include: [models.Message],
+  });
 
-  await models.User.create(
-    {
-      username: 'ddavids',
-      messages: [
-        {
-          text: 'Happy to release ...',
-        },
-        {
-          text: 'Published a complete ...',
-        },
-      ],
-    },
-    {
-      include: [models.Message],
-    },
-  );
+  await models.User.create(users['jdoe'], {
+    include: [models.Message],
+  });
 };
